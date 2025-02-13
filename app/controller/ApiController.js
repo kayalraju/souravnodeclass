@@ -1,8 +1,8 @@
-const StudentModel=require('../model/student')
 const StudentModel1=require('../model/multiImage')
 const path=require('path');
 const fs=require('fs');
-const { log } = require('console');
+const { StudentModel } = require('../model/student');
+
 
 class ApiController {
 
@@ -32,6 +32,7 @@ async createStudent(req,res){
     }
 
 }
+
 
 //get student
 async getstudent(req,res){

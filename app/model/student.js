@@ -1,5 +1,9 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const joi = require('joi');
+
+
+
 
 const StudentSchema=new Schema({
     name:{
@@ -21,4 +25,13 @@ const StudentSchema=new Schema({
 })
 
 const StudentModel=mongoose.model('student',StudentSchema);
-module.exports=StudentModel;
+
+const validateSchema=(data)=>{
+    const joischema=joi.object({
+        name:joi.string().min(3).max(30),
+        email:joi.string().email().trim(true).required(),
+        phone:joi.string().required(),
+    })
+    return joischema.validate(data);
+}
+module.exports={StudentModel,validateSchema};
