@@ -3,17 +3,28 @@ const ejs=require('ejs');
 const dotenv = require('dotenv');
 const connectDb = require('./app/config/db');
 const  path = require('path');
+const cors = require('cors');
+const  rateLimit = require('./app/middleware/ratelimit');
 const app = expresss();
 dotenv.config();
 connectDb()
-//setup view engine
 
+
+//rate limit
+app.use(rateLimit);
+//cors setup
+app.use(cors());
+//setup view engine
 app.set('view engine','ejs');
 app.set('views','views');
 
 //parse incoming request
-app.use(expresss.json());
-app.use(expresss.urlencoded({extended:true}));
+app.use(expresss.json(
+    {
+        limit:'50mb'
+    }
+));
+app.use(expresss.urlencoded({limit:"50mb",extended:true}));
 
 
 //create a static folder

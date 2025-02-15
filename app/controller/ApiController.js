@@ -2,6 +2,8 @@ const StudentModel1=require('../model/multiImage')
 const path=require('path');
 const fs=require('fs');
 const { StudentModel } = require('../model/student');
+const slug=require('slugify');
+const { Validator } = require('node-input-validator');
 
 
 class ApiController {
@@ -9,12 +11,32 @@ class ApiController {
 async createStudent(req,res){
     //console.log('ssss',req.body);
     try{
-        const {name,email,phone}=req.body;
+        const rules = {
+            name: "required|string|minLength:3|maxLength:20",
+            // price: "required|numeric",
+            // size: "required|string",
+            // description: "required|string|minLength:3|maxLength:100",
+            // image: "required|array",
+            // rating: "required|object",
+            // "rating.rate": "required|numeric",
+            // "rating.count": "required|numeric",
+            // feature: "required|boolean",
+          };
+          const {name,email,phone}=req.body;
+          const v = new Validator(name,email,phone, rules);
+          const matched = await v.check();
+          if (!matched) {
+            return res.status(400).json({
+              status: 400,
+              error: v.errors,
+            });
+          }
 
        const stuData= new StudentModel({
             name,
             email,
-            phone
+            phone,
+            slug:slug(name)
         })
         if(req.file){
             stuData.image=req.file.path
