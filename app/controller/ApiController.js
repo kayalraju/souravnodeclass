@@ -1,4 +1,5 @@
 const StudentModel1=require('../model/multiImage')
+const csvModel=require('../model/csvModel')
 const path=require('path');
 const fs=require('fs');
 const { StudentModel } = require('../model/student');
@@ -157,6 +158,67 @@ async multipleImage(req,res){
         
     }
 }
+
+
+async pagination(req,res){
+    try{
+        const page=parseInt(req.query.page) ||1 ;
+        const limit=3
+        const totalData=await csvModel.countDocuments();
+        const totalpage=Math.ceil(totalData/limit);
+        const nextpage=page < totalpage ?page+1:null;
+        const prevpage=page > 1 ?page-1:null;
+        const udata=await csvModel.find().skip((page-1)*limit).limit(limit);
+        return res.status(201).json({
+            message:"data fetch successfully",
+            data:udata,
+            page,
+            prevpage,
+            nextpage,
+            totalpage,
+            totalData
+
+        })
+
+
+    }catch(error){
+        res.status(400).json({
+            message:error.message
+        })
+    }   
+
+}
+
+
+
+async search(req,res){
+    try{
+        let query={}
+        if(req.body.search){
+            const search=req.body.search;
+            query={
+                // name:{$regex:search,$options:'i'}
+                $or:[
+                    {name:{$regex:search,$options:'i'}},
+                    {mobile:{$regex:search,$options:'i'}}
+                ]
+            }
+        }
+
+        const data=await csvModel.find(query);
+        res.status(200).json({
+            message:"data fetch successfully",
+            data:data
+        })
+    }catch(error){
+        res.status(400).json({
+            message:error.message
+        })
+    }   
+
+}
+
+
 }
 
 module.exports=new ApiController();

@@ -17,5 +17,8 @@ router.delete('/student/delete/:id', ApiController.deletestudent)
 //multiple image upload
 router.post('/create/multi/image',studentImageUpload.array('images',10), ApiController.multipleImage)
 
+router.get('/pagination',ApiController.pagination)
+router.post('/search',ApiController.search)
+
 
 module.exports=router;
