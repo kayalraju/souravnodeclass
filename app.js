@@ -44,6 +44,9 @@ app.use(aboutRouter)
 const apiRouter = require('./app/router/ApiRoute');
 app.use('/api',apiRouter);
 
+const authRouter = require('./app/router/authRouter');
+app.use('/auth',authRouter);
+
 const port = 3006;
 
 app.listen(port,()=>{
