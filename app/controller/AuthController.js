@@ -100,6 +100,45 @@ async register(req,res){
    
     }
 
+
+
+    async updatePassword(req,res){
+        try{
+            const user_id=req.body.user_id;
+            const {password}=req.body;
+            if(!password){
+                return res.status(400).json({
+                    message:'Password is required'
+                })
+            }
+            const userdata=await User.findOne({_id:user_id})
+            if(userdata){
+               const newPassword= await hashPassword(password)
+               
+              await User.findByIdAndUpdate(
+                {_id:user_id},
+                {
+                    $set:{
+                        password:newPassword
+                    }
+                })
+                return res.status(200).json({
+                    message:'Password updated successfully',
+                })
+            }else{
+                return res.status(400).json({
+                    message:'failed to update password'
+                })
+            }
+
+        }catch(error){
+            console.log(error);
+            
+
+        }
+
+    }
+
 }
 
 

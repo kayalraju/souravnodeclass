@@ -11,7 +11,7 @@ connectDb()
 
 
 //rate limit
-app.use(rateLimit);
+//app.use(rateLimit);
 //cors setup
 app.use(cors());
 //setup view engine
